@@ -4,8 +4,16 @@ interface TagRegisterDto {
   name: string
 }
 
+import UserService from '@/services/UserService'
 import { v4 } from 'uuid'
 import { onMounted, ref, watch } from 'vue'
+
+const registerForm = ref({
+  name: '',
+  password: '',
+  email: '',
+  tags: [],
+})
 
 const tags = ref<TagRegisterDto[]>([])
 const tagInput = ref()
@@ -14,6 +22,12 @@ onMounted(() => {})
 
 function removeTag(id: string) {
   tags.value = tags.value.filter((x) => x.id != id)
+}
+
+async function registerUser() {
+  const service = new UserService()
+  registerForm.value = { ...registerForm.value, tags: tags.value.map((x) => x.name) }
+  const result = await service.createUser(registerForm.value)
 }
 
 watch(tagInput, (newTag) => {
@@ -31,6 +45,7 @@ watch(tagInput, (newTag) => {
 <template>
   <div class="flex w-full justify-center items-center bg-slate-900">
     <form
+      @submit.prevent="registerUser"
       class="flex flex-col w-full max-w-sm p-8 bg-slate-800 text-white rounded-2xl shadow-2xl space-y-6"
     >
       <h2 class="text-2xl font-semibold text-center text-white mb-4">Create Account</h2>
@@ -38,6 +53,7 @@ watch(tagInput, (newTag) => {
       <div class="flex flex-col space-y-2">
         <label for="name" class="text-sm font-medium text-gray-300">Full Name</label>
         <input
+          v-model="registerForm.name"
           @keydown.enter.prevent="addTag"
           id="name"
           type="text"
@@ -48,6 +64,7 @@ watch(tagInput, (newTag) => {
       <div class="flex flex-col space-y-2">
         <label for="email" class="text-sm font-medium text-gray-300">Email</label>
         <input
+          v-model="registerForm.email"
           @keydown.enter.prevent="addTag"
           id="email"
           type="email"
@@ -58,6 +75,7 @@ watch(tagInput, (newTag) => {
       <div class="flex flex-col space-y-2">
         <label for="password" class="text-sm font-medium text-gray-300">Password</label>
         <input
+          v-model="registerForm.password"
           @keydown.enter.prevent="addTag"
           id="password"
           type="password"
