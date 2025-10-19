@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { ref, watch, onMounted } from 'vue'
+import { v4 } from 'uuid'
+import UserService from '@/services/UserService'
+
 interface TagRegisterDto {
   id: string
   name: string
 }
-
-import UserService from '@/services/UserService'
-import { v4 } from 'uuid'
-import { onMounted, ref, watch } from 'vue'
 
 const registerForm = ref({
   name: '',
@@ -16,32 +16,50 @@ const registerForm = ref({
 })
 
 const tags = ref<TagRegisterDto[]>([])
-const tagInput = ref()
+const tagInput = ref('')
 
 onMounted(() => {})
 
+function addTag(tagName: string) {
+  const cleanTag = tagName.toLowerCase().trim()
+
+  if (!cleanTag) return
+
+  if (tags.value.some((t) => t.name === cleanTag)) {
+    alert('Essa tag já foi adicionada.')
+    tagInput.value = ''
+    return
+  }
+
+  if (tags.value.length >= 5) {
+    alert('Limite máximo de tags é 5. Remova algumas primeiro.')
+    return
+  }
+
+  const tag: TagRegisterDto = { id: v4(), name: cleanTag }
+  tags.value.push(tag)
+  tagInput.value = ''
+}
+
 function removeTag(id: string) {
-  tags.value = tags.value.filter((x) => x.id != id)
+  tags.value = tags.value.filter((x) => x.id !== id)
 }
 
 async function registerUser() {
   const service = new UserService()
   registerForm.value = { ...registerForm.value, tags: tags.value.map((x) => x.name) }
-  const result = await service.createUser(registerForm.value)
+  await service.createUser(registerForm.value)
+  alert('Usuário criado com sucesso!')
 }
 
-watch(tagInput, (newTag) => {
-  if (newTag.includes(' ')) {
-    if (tags.value.length > 5) {
-      alert('Limite máximo de tags é 5, remove algumas primeiro ')
-      return
-    }
-    tagInput.value = ''
-    const tag: TagRegisterDto = { name: newTag.toLowerCase().trim(), id: v4() }
-    tags.value.push(tag)
+watch(tagInput, (newVal) => {
+  if (!newVal) return
+  if (newVal.endsWith(' ')) {
+    addTag(newVal)
   }
 })
 </script>
+
 <template>
   <div class="flex w-full justify-center items-center bg-slate-900">
     <form
@@ -93,7 +111,7 @@ watch(tagInput, (newTag) => {
             v-model="tagInput"
             id="tag"
             type="text"
-            @keydown.enter.prevent="addTag"
+            @keydown.enter.prevent="addTag(tagInput)"
             class="px-4 py-2 rounded-md bg-slate-700 border border-slate-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           />
         </div>
