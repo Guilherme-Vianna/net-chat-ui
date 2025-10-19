@@ -2,7 +2,10 @@
 import { ref, watch, onMounted } from 'vue'
 import { v4 } from 'uuid'
 import UserService from '@/services/UserService'
+import { useToast } from 'vue-toastification'
+import { router } from '@/main'
 
+const notification = useToast()
 interface TagRegisterDto {
   id: string
   name: string
@@ -48,8 +51,13 @@ function removeTag(id: string) {
 async function registerUser() {
   const service = new UserService()
   registerForm.value = { ...registerForm.value, tags: tags.value.map((x) => x.name) }
-  await service.createUser(registerForm.value)
-  alert('Usuário criado com sucesso!')
+  const result = await service.createUser(registerForm.value)
+  if (result != null) {
+    notification.info('Você vai ser redirecionado para a tela de login em alguns instantes')
+    setTimeout(() => {
+      router.push('login')
+    }, 5000)
+  }
 }
 
 watch(tagInput, (newVal) => {
@@ -61,6 +69,10 @@ watch(tagInput, (newVal) => {
 </script>
 
 <template>
+  <Notivue v-slot="item">
+    <Notification :item="item" />
+  </Notivue>
+
   <div class="flex w-full justify-center items-center bg-slate-900">
     <form
       @submit.prevent="registerUser"
@@ -132,6 +144,8 @@ watch(tagInput, (newVal) => {
       >
         Sign Up
       </button>
+
+      <button @click="push.success('Hi! I am your first notification!')">Push</button>
 
       <p class="text-center text-sm text-gray-400">
         Already have an account?

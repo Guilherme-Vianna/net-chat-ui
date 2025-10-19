@@ -1,4 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const isLoggedIn = ref(false)
+
+
+
+
+</script>
 
 <template>
   <div class="min-h-screen flex flex-col bg-slate-900 text-white">
