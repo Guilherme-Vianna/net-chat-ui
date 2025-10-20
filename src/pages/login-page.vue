@@ -22,7 +22,7 @@ async function loginUser() {
     const result = await service.loginUser(loginForm.value)
     if (result) {
       notification.success('Login realizado com sucesso!')
-      router.push('/home')
+      window.location.reload()
     } else {
       notification.error('Credenciais inválidas. Verifique seu email e senha.')
     }

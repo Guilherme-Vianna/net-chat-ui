@@ -4,6 +4,7 @@ import { v4 } from 'uuid'
 import UserService from '@/services/UserService'
 import { useToast } from 'vue-toastification'
 import { router } from '@/main'
+import HeaderBar from '@/components/main-header.vue'
 
 const notification = useToast()
 interface TagRegisterDto {
@@ -48,17 +49,7 @@ function removeTag(id: string) {
   tags.value = tags.value.filter((x) => x.id !== id)
 }
 
-async function registerUser() {
-  const service = new UserService()
-  registerForm.value = { ...registerForm.value, tags: tags.value.map((x) => x.name) }
-  const result = await service.createUser(registerForm.value)
-  if (result != null) {
-    notification.info('Você vai ser redirecionado para a tela de login em alguns instantes')
-    setTimeout(() => {
-      router.push('/login')
-    }, 5000)
-  }
-}
+async function save() {}
 
 watch(tagInput, (newVal) => {
   if (!newVal) return

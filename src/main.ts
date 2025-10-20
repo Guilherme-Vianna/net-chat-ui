@@ -6,9 +6,11 @@ import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import Register from './pages/register-page.vue';
 import Login from './pages/login-page.vue';
+import CustomizeProfile from './pages/customize-profile.vue';
 
 const routes = [
     { path: '/register', component: Register },
+    { path: '/profile', component: CustomizeProfile },
     { path: '/login', component: Login },
 ]
 
