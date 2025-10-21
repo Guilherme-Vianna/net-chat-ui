@@ -102,7 +102,7 @@ watchEffect(async () => {
             class="absolute right-0 mt-2 w-44 bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden"
           >
             <RouterLink
-              to="/profile/customize"
+              to="/profile"
               class="flex items-center gap-2 px-4 py-2 hover:bg-slate-700 transition"
             >
               <Settings class="w-4 h-4" />

@@ -8,6 +8,7 @@ import { useToast, type ToastInterface } from 'vue-toastification'
 import {
     useCookies
 } from '@vueuse/integrations/useCookies'
+import type UpdateUserDto from '@/types/UpdateUserDto.ts'
 export default class UserService {
     toast: ToastInterface
     cookies: any
@@ -52,5 +53,22 @@ export default class UserService {
         }
         this.cookies.set("token", response.data.token)
         return response.data
+    }
+
+
+    async updateUser(data: UpdateUserDto): Promise<LoginResponse> {
+      const token = this.cookies.get("token")
+
+      const response = await axios.put(Enviroment.API_URL + "users", data,{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      if (!response.status.toString().startsWith("2")) {
+          this.toast.info("Ocorreu um erro durante a atualização!")
+      }
+
+      return response.data
     }
 }

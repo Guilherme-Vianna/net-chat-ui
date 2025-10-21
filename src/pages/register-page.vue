@@ -145,8 +145,6 @@ watch(tagInput, (newVal) => {
         Sign Up
       </button>
 
-      <button @click="push.success('Hi! I am your first notification!')">Push</button>
-
       <p class="text-center text-sm text-gray-400">
         Already have an account?
         <RouterLink to="/enter" class="text-blue-400 hover:underline">Log in</RouterLink>
