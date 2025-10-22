@@ -62,7 +62,7 @@ watchEffect(async () => {
     <nav v-else class="flex items-center gap-5">
       <!-- New Chat -->
       <RouterLink
-        to="/new-chat"
+        to="/find-chat"
         class="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-3xl transition"
       >
         <Search class="w-5 h-5" />
