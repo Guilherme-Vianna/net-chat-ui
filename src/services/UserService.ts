@@ -9,6 +9,7 @@ import {
     useCookies
 } from '@vueuse/integrations/useCookies'
 import type UpdateUserDto from '@/types/UpdateUserDto.ts'
+import type AddUserFriend from "@/types/AddUserFriend"
 export default class UserService {
     toast: ToastInterface
     cookies: any
@@ -57,18 +58,34 @@ export default class UserService {
 
 
     async updateUser(data: UpdateUserDto): Promise<LoginResponse> {
-      const token = this.cookies.get("token")
+        const token = this.cookies.get("token")
 
-      const response = await axios.put(Enviroment.API_URL + "users", data,{
-        headers: {
-          Authorization: `Bearer ${token}`
+        const response = await axios.put(Enviroment.API_URL + "users", data, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        if (!response.status.toString().startsWith("2")) {
+            this.toast.info("Ocorreu um erro durante a atualização!")
         }
-      })
 
-      if (!response.status.toString().startsWith("2")) {
-          this.toast.info("Ocorreu um erro durante a atualização!")
-      }
+        return response.data
+    }
 
-      return response.data
+    async addFriend(data: AddUserFriend): Promise<LoginResponse> {
+        const token = this.cookies.get("token")
+
+        const response = await axios.put(Enviroment.API_URL + "users" + "/friends", data, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        if (!response.status.toString().startsWith("2")) {
+            this.toast.info("Ocorreu um erro durante a atualização!")
+        }
+
+        return response.data
     }
 }

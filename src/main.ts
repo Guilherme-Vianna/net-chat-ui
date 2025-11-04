@@ -8,12 +8,14 @@ import Register from './pages/register-page.vue';
 import Login from './pages/login-page.vue';
 import CustomizeProfile from './pages/customize-profile.vue';
 import FindChat from '@/pages/find-chat.vue'
+import Chats from './pages/chats.vue';
 
 const routes = [
     { path: '/register', component: Register },
     { path: '/find-chat', component: FindChat },
     { path: '/profile', component: CustomizeProfile },
     { path: '/login', component: Login },
+    { path: '/chats', component: Chats },
 ]
 
 export const router = createRouter({
